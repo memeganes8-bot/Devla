@@ -8,8 +8,8 @@ WORKDIR /usr/local/tomcat/webapps/
 COPY ./WebContent /usr/local/tomcat/webapps/INMOBILIARIAWEB/
 
 # Copiar el conector MySQL dentro de la carpeta lib de Tomcat
-COPY /INMOBILIARIAWEB/WEB-INF/lib/mysql-connector-j-9.0.0.jar /usr/local/tomcat/lib/
-COPY /INMOBILIARIAWEB/WEB-INF/lib/itextpdf-5.5.13.3.jar /usr/local/tomcat/lib/
+COPY ./INMOBILIARIAWEB/WEB-INF/lib/mysql-connector-j-9.0.0.jar /usr/local/tomcat/lib/
+COPY ./INMOBILIARIAWEB/WEB-INF/lib/itextpdf-5.5.13.3.jar /usr/local/tomcat/lib/
 
 
 
