@@ -1,0 +1,17 @@
+<%
+// Verificar si el usuario está autenticado
+String usuarioId = (String) session.getAttribute("usuario_id");
+String usuarioRol = (String) session.getAttribute("usuario_rol");
+
+if (usuarioId == null) {
+    response.sendRedirect("../login.jsp");
+    return;
+}
+
+// Verificar permisos por rol si es necesario
+String rolRequerido = request.getParameter("rol_requerido");
+if (rolRequerido != null && !rolRequerido.equals(usuarioRol)) {
+    response.sendRedirect("../dashboard.jsp?error=acceso_denegado");
+    return;
+}
+%>

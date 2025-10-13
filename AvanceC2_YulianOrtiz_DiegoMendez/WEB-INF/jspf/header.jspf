@@ -1,0 +1,114 @@
+<%@ page import="java.sql.*" %>
+<%
+// Obtener información del usuario - SIN redeclarar variables
+String usuarioNombreHeader = (String) session.getAttribute("usuario_nombre");
+String usuarioRolHeader = (String) session.getAttribute("usuario_rol");
+
+// Determinar la ruta base según la ubicación actual
+String currentPage = request.getRequestURI();
+String logoutPath = "";
+String dashboardPath = "";
+String cssPath = "";
+String imgPath = "";
+
+if (currentPage.contains("/pages/admin/") || 
+    currentPage.contains("/pages/coordinacion/") ||
+    currentPage.contains("/pages/director/") ||
+    currentPage.contains("/pages/evaluador/") ||
+    currentPage.contains("/pages/estudiante/")) {
+    // Está en una subcarpeta de rol (2 niveles de profundidad)
+    logoutPath = "../../logout.jsp";
+    dashboardPath = "dashboard.jsp";
+    cssPath = "../../css/styles.css";
+    imgPath = "../../img/";
+} else if (currentPage.contains("/pages/")) {
+    // Está en la carpeta pages (1 nivel de profundidad)  
+    logoutPath = "../logout.jsp";
+    dashboardPath = "dashboard.jsp";
+    cssPath = "../css/styles.css";
+    imgPath = "../img/";
+} else {
+    // Está en la raíz
+    logoutPath = "logout.jsp";
+    dashboardPath = "dashboard.jsp";
+    cssPath = "css/styles.css";
+    imgPath = "img/";
+}
+
+// Determinar el subtítulo según el rol
+String subtitulo = "Sistema de Gesti&#243;n";
+if ("admin".equals(usuarioRolHeader)) {
+    subtitulo = "Panel de Administraci&#243;n";
+} else if ("coordinacion".equals(usuarioRolHeader)) {
+    subtitulo = "Panel de Coordinaci&#243;n";
+} else if ("director".equals(usuarioRolHeader)) {
+    subtitulo = "Panel del Director";
+} else if ("evaluador".equals(usuarioRolHeader)) {
+    subtitulo = "Panel del Evaluador";
+} else if ("estudiante".equals(usuarioRolHeader)) {
+    subtitulo = "Panel del Estudiante";
+}
+%>
+
+<header class="uts-header">
+    <div class="header-container">
+        <div class="logo-section">
+            <img src="<%= imgPath %>logo-uts.png" alt="Logo UTS" class="uts-logo">
+            <div>
+                <h1 class="uts-title">Unidades Tecnol&#243;gicas de Santander</h1>
+                <p class="uts-subtitle"><%= subtitulo %></p>
+            </div>
+        </div>
+        <div class="user-info">
+            <span class="user-welcome">Bienvenido, <%= usuarioNombreHeader %></span>
+            <span class="user-role"><%= usuarioRolHeader != null ? usuarioRolHeader.toUpperCase() : "" %></span>
+            <a href="<%= logoutPath %>" class="logout-btn" 
+               onclick="return confirm('¿Estás seguro de que deseas cerrar sesión?')">Cerrar Sesi&#243;n</a>
+        </div>
+    </div>
+    
+    <nav class="main-nav">
+        <ul>
+            <%
+            if ("admin".equals(usuarioRolHeader)) {
+            %>
+                <li><a href="<%= dashboardPath %>">Dashboard</a></li>
+                <li><a href="gestionUsuarios.jsp">Gesti&#243;n de Usuarios</a></li>
+                <li><a href="registrarUsuario.jsp">Registrar Usuario</a></li>
+            <%
+            } else if ("coordinacion".equals(usuarioRolHeader)) {
+            %>
+                <li><a href="<%= dashboardPath %>">Dashboard</a></li>
+                <li><a href="gestionProyectos.jsp">Gesti&#243;n de Proyectos</a></li>
+                <li><a href="asignarDirector.jsp">Asignar Directores</a></li>
+                <li><a href="asignarEvaluador.jsp">Asignar Evaluadores</a></li>
+            <%
+            } else if ("director".equals(usuarioRolHeader)) {
+            %>
+                <li><a href="<%= dashboardPath %>">Dashboard</a></li>
+                <li><a href="proyectosAsignados.jsp">Proyectos Asignados</a></li>
+                <li><a href="calificarProyecto.jsp">Calificar Proyectos</a></li>
+            <%
+            } else if ("evaluador".equals(usuarioRolHeader)) {
+            %>
+                <li><a href="<%= dashboardPath %>">Dashboard</a></li>
+                <li><a href="proyectosEvaluacion.jsp">Proyectos para Evaluar</a></li>
+                <li><a href="evaluarProyecto.jsp">Evaluar Proyectos</a></li>
+            <%
+            } else if ("estudiante".equals(usuarioRolHeader)) {
+            %>
+                <li><a href="<%= dashboardPath %>">Dashboard</a></li>
+                <li><a href="proponerIdea.jsp">Proponer Idea</a></li>
+                <li><a href="misProyectos.jsp">Mis Proyectos</a></li>
+                <li><a href="subirAnteproyecto.jsp">Subir Anteproyecto</a></li>
+            <%
+            }
+            %>
+            <!-- Enlaces comunes para todos los roles -->
+            <li><a href="https://www.uts.edu.co/sitio/calendario-academico" target="_blank">Calendario Acad&#233;mico</a></li>
+            <li><a href="http://repositorio.uts.edu.co:8080/xmlui/handle/123456789/3949" target="_blank">Formatos de Grado</a></li>
+        </ul>
+    </nav>
+</header>
+
+<link rel="stylesheet" href="<%= cssPath %>">

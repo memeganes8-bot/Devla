@@ -1,0 +1,66 @@
+Listado de rutas de carpetas para el volumen Windows-SSD
+El número de serie del volumen es 8CA0-C787
+C:.
+¦   dashboard.jsp
+¦   estructura.txt
+¦   index.jsp
+¦   login.jsp
+¦   logout.jsp
+¦   register.jsp
+¦   web.xml
+¦   
++---css
+¦       styles.css
+¦       
++---img
+¦       fondo.png
+¦       fondo2.png
+¦       Logo-UTS-1.png
+¦       logo-uts.jpg
+¦       
++---js
+¦       scripts.js
+¦       
++---pages
+¦   +---admin
+¦   ¦       dashboard.jsp
+¦   ¦       editarUsuario.jsp
+¦   ¦       eliminarUsuario.jsp
+¦   ¦       gestionUsuarios.jsp
+¦   ¦       registrarUsuario.jsp
+¦   ¦       
+¦   +---coordinacion
+¦   ¦       asignarDirector.jsp
+¦   ¦       asignarEvaluador.jsp
+¦   ¦       dashboard.jsp
+¦   ¦       gestionProyectos.jsp
+¦   ¦       
+¦   +---director
+¦   ¦       calificarProyecto.jsp
+¦   ¦       dashboard.jsp
+¦   ¦       proyectosAsignados.jsp
+¦   ¦       
+¦   +---estudiante
+¦   ¦       dashboard.jsp
+¦   ¦       historialVersiones.jsp
+¦   ¦       misProyectos.jsp
+¦   ¦       proponerIdea.jsp
+¦   ¦       subirAnteproyecto.jsp
+¦   ¦       
+¦   +---evaluador
+¦           dashboard.jsp
+¦           evaluarProyecto.jsp
+¦           proyectosEvaluacion.jsp
+¦           
++---WEB-INF
+    +---jspf
+    ¦       auth-check.jspf
+    ¦       conexion.jspf
+    ¦       footer.jspf
+    ¦       header.jspf
+    ¦       
+    +---lib
+            jakarta.servlet.jsp.jstl-api-3.0.2.jar
+            jstl-1.2.jar
+            mysql-connector-j-9.2.0.jar
+            
