@@ -1,11 +1,26 @@
-# Usar imagen base de Java 21
-FROM eclipse-temurin:21-jre-alpine
+# ETAPA 1: Compilación
+FROM eclipse-temurin:21-jdk-alpine AS build
+
+# Instalar Maven
+RUN apk add --no-cache maven
 
 # Crear directorio de trabajo
 WORKDIR /app
 
-# Copiar el JAR generado
-COPY target/saberpro.jar app.jar
+# Copiar archivos de Maven
+COPY pom.xml .
+COPY src ./src
+
+# Compilar el proyecto
+RUN mvn clean package -DskipTests
+
+# ETAPA 2: Ejecución
+FROM eclipse-temurin:21-jre-alpine
+
+WORKDIR /app
+
+# Copiar el JAR desde la etapa de compilación
+COPY --from=build /app/target/saberpro.jar app.jar
 
 # Exponer el puerto
 EXPOSE 8080
