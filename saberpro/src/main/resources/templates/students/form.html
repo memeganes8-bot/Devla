@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${student.id != null} ? 'Editar Estudiante' : 'Nuevo Estudiante'">Formulario Estudiante</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: #f4f6f9;
+        }
+        .navbar-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-container {
+            max-width: 700px;
+            margin: 30px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .form-header i {
+            font-size: 50px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+        }
+        .required::after {
+            content: " *";
+            color: red;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px 40px;
+            color: white;
+            font-weight: 600;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/coordinacion/dashboard">
+                <i class="bi bi-person-badge-fill"></i>
+                Sistema Saber Pro/TyT - Coordinación
+            </a>
+            <div class="d-flex align-items-center">
+                <a href="/students" class="btn btn-light btn-sm me-2">
+                    <i class="bi bi-arrow-left"></i> Volver a Lista
+                </a>
+                <a href="/logout" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Form Container -->
+    <div class="form-container">
+        <!-- Header -->
+        <div class="form-header">
+            <i class="bi" th:classappend="${student.id != null} ? 'bi-person-fill-gear' : 'bi-person-plus-fill'"></i>
+            <h2 th:text="${student.id != null} ? 'Editar Estudiante' : 'Nuevo Estudiante'">Formulario</h2>
+            <p class="text-muted mb-0">Complete la información del estudiante</p>
+        </div>
+
+        <!-- Mensajes -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Formulario -->
+        <form th:action="${student.id != null} ? @{/students/update/{id}(id=${student.id})} : @{/students}" 
+              method="post" 
+              th:object="${student}">
+            
+            <!-- ⭐ CÓDIGO DE REGISTRO -->
+            <div class="mb-3">
+                <label for="identification" class="form-label required">Código de Registro</label>
+                <input type="text" 
+                       class="form-control form-control-lg" 
+                       id="identification" 
+                       th:field="*{identification}"
+                       th:readonly="${student.id != null}"
+                       placeholder="Ej: EK2083007722"
+                       maxlength="20"
+                       style="text-transform: uppercase;"
+                       required>
+                <small class="text-muted">
+                    <i class="bi bi-info-circle"></i> 
+                    Este código será usado para iniciar sesión
+                </small>
+            </div>
+
+            <!-- ⭐ APELLIDO -->
+            <div class="mb-3">
+                <label for="lastName" class="form-label required">Apellido del Estudiante</label>
+                <input type="text" 
+                       class="form-control form-control-lg" 
+                       id="lastName" 
+                       th:field="*{lastName}"
+                       placeholder="Ej: BARBOSA"
+                       style="text-transform: uppercase;"
+                       required>
+                <small class="text-muted">
+                    <i class="bi bi-info-circle"></i> 
+                    Solo el primer apellido
+                </small>
+            </div>
+
+            <!-- Programa -->
+            <div class="mb-3">
+                <label for="program" class="form-label required">Programa Académico</label>
+                <input type="text" 
+                       class="form-control" 
+                       id="program" 
+                       th:field="*{program}"
+                       placeholder="Ej: Ingeniería de Sistemas"
+                       required>
+            </div>
+
+            <div class="row">
+                <!-- Tipo de Programa -->
+                <div class="col-md-6 mb-3">
+                    <label for="programType" class="form-label required">Tipo de Programa</label>
+                    <select class="form-select" 
+                            id="programType" 
+                            th:field="*{programType}"
+                            required>
+                        <option value="">Seleccione...</option>
+                        <option value="TECNOLOGICO">Tecnológico (Saber TyT)</option>
+                        <option value="PROFESIONAL">Profesional (Saber PRO)</option>
+                    </select>
+                </div>
+
+                <!-- Año de Ingreso -->
+                <div class="col-md-6 mb-3">
+                    <label for="enrollmentYear" class="form-label required">Año de Ingreso</label>
+                    <input type="number" 
+                           class="form-control" 
+                           id="enrollmentYear" 
+                           th:field="*{enrollmentYear}"
+                           min="2000" 
+                           max="2025"
+                           placeholder="2024"
+                           required>
+                </div>
+            </div>
+
+            <!-- Estado (solo en edición) -->
+            <div class="mb-4" th:if="${student.id != null}">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" 
+                           type="checkbox" 
+                           id="active" 
+                           th:field="*{active}">
+                    <label class="form-check-label" for="active">
+                        <strong>Estudiante Activo</strong>
+                    </label>
+                </div>
+                <small class="text-muted">
+                    Los estudiantes inactivos no podrán acceder al sistema
+                </small>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="alert alert-info">
+                <h6 class="alert-heading">
+                    <i class="bi bi-lightbulb-fill"></i> Recuerda
+                </h6>
+                <ul class="mb-0 small">
+                    <li><strong>Tecnológico:</strong> Saber TyT (0-200 pts). Mínimo: 80</li>
+                    <li><strong>Profesional:</strong> Saber PRO (0-300 pts). Mínimo: 120</li>
+                    <li>El estudiante inicia sesión solo con su código</li>
+                </ul>
+            </div>
+
+            <!-- Botones -->
+            <div class="d-flex justify-content-between mt-4">
+                <a href="/students" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </a>
+                <button type="submit" class="btn btn-submit">
+                    <i class="bi" th:classappend="${student.id != null} ? 'bi-save' : 'bi-plus-circle'"></i>
+                    <span th:text="${student.id != null} ? 'Guardar Cambios' : 'Crear Estudiante'">Guardar</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Convertir a mayúsculas automáticamente
+        document.getElementById('identification').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+        document.getElementById('lastName').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+    </script>
+</body>
+</html>

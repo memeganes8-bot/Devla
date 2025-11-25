@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Resultado - Sistema Saber Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/coordinacion/dashboard}">
+                <i class="bi bi-graduation-cap"></i> Sistema Saber Pro
+            </a>
+            <a href="/logout" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </a>
+        </div>
+    </nav>
+    
+    <div class="container mt-4">
+        
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/coordinacion/dashboard}">Inicio</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/results}">Resultados</a></li>
+                <li class="breadcrumb-item active">Registrar Resultado</li>
+            </ol>
+        </nav>
+        
+        <!-- Formulario -->
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">
+                    <i class="bi bi-plus-circle"></i> Registrar Nuevo Resultado
+                </h3>
+            </div>
+            <div class="card-body">
+                
+                <!-- Info -->
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Nota:</strong> Al registrar el resultado, el sistema calculará automáticamente los beneficios académicos según el puntaje obtenido.
+                </div>
+                
+                <form th:action="@{/results}" method="post" class="needs-validation" novalidate>
+                    
+                    <!-- Estudiante -->
+                    <div class="mb-3">
+                        <label for="studentId" class="form-label">
+                            <i class="bi bi-person"></i> Estudiante *
+                        </label>
+                        <select class="form-select" id="studentId" name="studentId" required>
+                            <option value="">Seleccione un estudiante...</option>
+                            <!-- ⭐ CAMBIO: Solo muestra apellido + código -->
+                            <option th:each="student : ${students}" 
+                                    th:value="${student.id}" 
+                                    th:text="${student.lastName + ' (' + student.identification + ')'}">
+                                BARBOSA (EK2083007722)
+                            </option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Debe seleccionar un estudiante
+                        </div>
+                    </div>
+                    
+                    <!-- Tipo de Prueba -->
+                    <div class="mb-3">
+                        <label for="testType" class="form-label">
+                            <i class="bi bi-clipboard"></i> Tipo de Prueba *
+                        </label>
+                        <select class="form-select" id="testType" name="testType" required>
+                            <option value="">Seleccione el tipo de prueba...</option>
+                            <option th:each="type : ${testTypes}" 
+                                    th:value="${type}" 
+                                    th:text="${type.displayName + ' (0-' + type.maxScore + ' puntos)'}">
+                                Tipo
+                            </option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Debe seleccionar el tipo de prueba
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Puntaje -->
+                        <div class="col-md-6 mb-3">
+                            <label for="score" class="form-label">
+                                <i class="bi bi-123"></i> Puntaje Obtenido *
+                            </label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="score" 
+                                   name="score" 
+                                   min="0" 
+                                   max="300" 
+                                   required>
+                            <div class="invalid-feedback">
+                                Ingrese un puntaje válido
+                            </div>
+                            <small class="text-muted">
+                                TyT: 0-200 | PRO: 0-300
+                            </small>
+                        </div>
+                        
+                        <!-- Fecha -->
+                        <div class="col-md-6 mb-3">
+                            <label for="testDate" class="form-label">
+                                <i class="bi bi-calendar"></i> Fecha de la Prueba *
+                            </label>
+                            <input type="date" 
+                                   class="form-control" 
+                                   id="testDate" 
+                                   name="testDate" 
+                                   required>
+                            <div class="invalid-feedback">
+                                Ingrese la fecha de la prueba
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Observaciones -->
+                    <div class="mb-3">
+                        <label for="observations" class="form-label">
+                            <i class="bi bi-chat-text"></i> Observaciones
+                        </label>
+                        <textarea class="form-control" 
+                                  id="observations" 
+                                  name="observations" 
+                                  rows="3" 
+                                  placeholder="Observaciones adicionales (opcional)"></textarea>
+                    </div>
+                    
+                    <!-- Información de Beneficios -->
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="bi bi-gift"></i> Beneficios según puntaje
+                            </h6>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Saber TyT (0-200):</strong>
+                                    <ul class="small mb-0">
+                                        <li>171-200: Nota 5.0 + 100% beca + exoneración</li>
+                                        <li>151-170: Nota 4.7 + 50% beca + exoneración</li>
+                                        <li>120-150: Nota 4.5 + exoneración</li>
+                                        <li class="text-danger">< 80: No puede graduarse</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Saber PRO (0-300):</strong>
+                                    <ul class="small mb-0">
+                                        <li>241-300: Nota 5.0 + 100% beca + exoneración</li>
+                                        <li>211-240: Nota 4.7 + 50% beca + exoneración</li>
+                                        <li>180-210: Nota 4.5 + exoneración</li>
+                                        <li class="text-danger">< 120: No puede graduarse</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones -->
+                    <div class="d-flex justify-content-between">
+                        <a th:href="@{/results}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-save"></i> Registrar Resultado
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Validación -->
+    <script>
+        (function() {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+</body>
+</html>

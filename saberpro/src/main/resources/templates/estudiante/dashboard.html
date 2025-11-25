@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Dashboard - Sistema Saber Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: #f4f6f9;
+        }
+        .navbar-custom {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            border-radius: 15px 15px 0 0 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-mortarboard-fill"></i> Portal Estudiante
+            </a>
+            <div class="ms-auto">
+                <span class="text-white me-3">
+                    <i class="bi bi-person-circle"></i> 
+                    <!-- ⭐ CAMBIO: usa lastName en vez de fullName -->
+                    <span th:text="${student.lastName}">Estudiante</span>
+                </span>
+                <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Mensaje de bienvenida -->
+        <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show">
+            <i class="bi bi-check-circle-fill"></i>
+            <span th:text="${mensaje}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <h1 class="mb-4">
+            <i class="bi bi-house-door"></i> Mi Dashboard
+        </h1>
+
+        <!-- Info del Estudiante -->
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-person"></i> Información Personal</h5>
+            </div>
+            <div class="card-body">
+                <!-- ⭐ CAMBIO: Solo muestra apellido -->
+                <p><strong>Apellido:</strong> <span th:text="${student.lastName}">APELLIDO</span></p>
+                <p><strong>Código de Registro:</strong> <span th:text="${student.identification}">EK2083007722</span></p>
+                <p><strong>Programa:</strong> <span th:text="${student.program}">Programa</span></p>
+                <p><strong>Tipo:</strong> 
+                    <span class="badge" 
+                          th:classappend="${student.programType.name() == 'PROFESIONAL'} ? 'bg-primary' : 'bg-info'"
+                          th:text="${student.programType.name() == 'PROFESIONAL'} ? 'Profesional (Saber PRO)' : 'Tecnológico (Saber TyT)'">
+                        Tipo
+                    </span>
+                </p>
+                <p><strong>Año de Ingreso:</strong> <span th:text="${student.enrollmentYear}">2020</span></p>
+            </div>
+        </div>
+
+        <!-- Resultado Más Reciente -->
+        <div class="card" th:if="${latestResult != null}">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-clipboard-data"></i> Mi Último Resultado</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3 th:text="${latestResult.score} + ' puntos'" class="text-primary">150 puntos</h3>
+                        <p><strong>Tipo de Prueba:</strong> <span th:text="${latestResult.testTypeName}">Saber TyT</span></p>
+                        <p><strong>Fecha:</strong> <span th:text="${latestResult.testDate}">2024-01-15</span></p>
+                        <p><strong>Rango:</strong> <span th:text="${latestResult.scoreRange}" class="badge bg-info">Bueno</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <div th:if="${latestResult.benefit != null and latestResult.benefit.benefitType.name() != 'NONE'}">
+                            <h5 class="text-success"><i class="bi bi-trophy"></i> Beneficios Obtenidos</h5>
+                            <div class="alert alert-success">
+                                <p><strong>Nota Final:</strong> <span th:text="${latestResult.benefit.grade}">4.5</span></p>
+                                <p th:if="${latestResult.benefit.scholarshipPercentage > 0}">
+                                    <strong>Beca:</strong> <span th:text="${latestResult.benefit.scholarshipPercentage} + '%'">50%</span>
+                                </p>
+                                <p th:if="${latestResult.benefit.reportExemption}">
+                                    <i class="bi bi-check-circle-fill"></i> Exoneración de informe final
+                                </p>
+                            </div>
+                        </div>
+                        <div th:unless="${latestResult.benefit != null and latestResult.benefit.benefitType.name() != 'NONE'}">
+                            <div class="alert alert-warning">
+                                <i class="bi bi-info-circle"></i> Sin beneficios académicos
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Verificación de Graduación -->
+                <div th:if="${!latestResult.allowsGraduation()}" class="alert alert-danger mt-3">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <strong>¡ATENCIÓN!</strong> Tu puntaje no alcanza el mínimo requerido para graduación.
+                </div>
+                <div th:if="${latestResult.allowsGraduation()}" class="alert alert-success mt-3">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <strong>¡Felicitaciones!</strong> Tu puntaje cumple con los requisitos para graduación.
+                </div>
+            </div>
+        </div>
+
+        <!-- Sin Resultados -->
+        <div class="alert alert-info" th:if="${latestResult == null}">
+            <i class="bi bi-info-circle"></i> Aún no tienes resultados registrados. Contacta con coordinación.
+        </div>
+
+        <!-- Historial de Resultados -->
+        <div class="card" th:if="${results != null && !results.isEmpty()}">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Historial de Resultados</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Tipo de Prueba</th>
+                                <th>Puntaje</th>
+                                <th>Rango</th>
+                                <th>Beneficio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="result : ${results}">
+                                <td th:text="${result.testDate}">2024-01-15</td>
+                                <td th:text="${result.testTypeName}">Saber TyT</td>
+                                <td><strong th:text="${result.score}">150</strong></td>
+                                <td><span th:text="${result.scoreRange}" class="badge bg-info">Bueno</span></td>
+                                <td>
+                                    <span th:if="${result.benefit != null and result.benefit.benefitType.name() != 'NONE'}" 
+                                          class="badge bg-success">
+                                        Sí
+                                    </span>
+                                    <span th:unless="${result.benefit != null and result.benefit.benefitType.name() != 'NONE'}" 
+                                          class="badge bg-secondary">
+                                        No
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Puede Graduarse -->
+        <div class="card" th:if="${canGraduate}">
+            <div class="card-body text-center">
+                <h3 class="text-success">
+                    <i class="bi bi-award-fill"></i> ¡Cumples con los requisitos para graduarte!
+                </h3>
+                <p class="text-muted">Tu puntaje más reciente cumple con el mínimo requerido</p>
+            </div>
+        </div>
+
+        <div class="card" th:unless="${canGraduate}">
+            <div class="card-body text-center">
+                <h5 class="text-warning">
+                    <i class="bi bi-exclamation-triangle"></i> Aún no cumples con los requisitos de graduación
+                </h5>
+                <p class="text-muted">Necesitas alcanzar el puntaje mínimo requerido</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

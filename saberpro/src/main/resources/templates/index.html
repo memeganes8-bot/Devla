@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Saber Pro/TyT - UTS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .welcome-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .access-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+        .access-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-color: #667eea;
+        }
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                
+                <!-- Card Principal -->
+                <div class="welcome-card">
+                    
+                    <!-- Header -->
+                    <div class="bg-primary text-white p-5 text-center">
+                        <div class="logo">
+                            <i class="bi bi-mortarboard-fill"></i>
+                        </div>
+                        <h1 class="display-4 fw-bold mb-3">Sistema Saber Pro/TyT</h1>
+                        <p class="lead mb-0">
+                            Unidades Tecnológicas de Santander
+                        </p>
+                        <p class="mt-2">Gestión de Resultados y Beneficios Académicos</p>
+                    </div>
+                    
+                    <!-- Mensaje de éxito -->
+                    <div th:if="${success}" class="alert alert-success m-4 mb-0" role="alert">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span th:text="${success}"></span>
+                    </div>
+                    
+                    <!-- Body - Opciones de acceso -->
+                    <div class="p-5">
+                        <h3 class="text-center mb-5 text-muted">Seleccione su tipo de acceso</h3>
+                        
+                        <div class="row g-4">
+                            
+                            <!-- ACCESO COORDINACIÓN -->
+                            <div class="col-md-6">
+                                <a href="/coordinacion/login" class="text-decoration-none">
+                                    <div class="card access-card h-100 text-center p-4">
+                                        <div class="card-body">
+                                            <div class="text-primary mb-3" style="font-size: 5rem;">
+                                                <i class="bi bi-person-badge-fill"></i>
+                                            </div>
+                                            <h3 class="card-title text-primary mb-3">Coordinación</h3>
+                                            <p class="card-text text-muted mb-4">
+                                                Acceso administrativo para gestión de estudiantes, 
+                                                resultados e informes.
+                                            </p>
+                                            <ul class="list-unstyled text-start">
+                                                <li class="mb-2">
+                                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                                    Gestionar estudiantes
+                                                </li>
+                                                <li class="mb-2">
+                                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                                    Registrar resultados
+                                                </li>
+                                                <li class="mb-2">
+                                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                                    Generar informes
+                                                </li>
+                                                <li class="mb-2">
+                                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                                    Ver beneficios otorgados
+                                                </li>
+                                            </ul>
+                                            <div class="mt-4">
+                                                <span class="badge bg-primary p-2">
+                                                    Requiere usuario y contraseña
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <!-- ACCESO ESTUDIANTE -->
+                            <div class="col-md-6">
+                                <a href="/estudiante/login" class="text-decoration-none">
+                                    <div class="card access-card h-100 text-center p-4">
+                                        <div class="card-body">
+                                            <div class="text-success mb-3" style="font-size: 5rem;">
+                                                <i class="bi bi-person-circle"></i>
+                                            </div>
+                                            <h3 class="card-title text-success mb-3">Estudiante</h3>
+                                            <p class="card-text text-muted mb-4">
+                                                Consulta tus resultados, beneficios obtenidos 
+                                                y estado de graduación.
+                                            </p>
+                                            <ul class="list-unstyled text-start">
+                                                <li class="mb-2">
+                                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                                    Ver mis datos
+                                                </li>
+                                                <li class="mb-2">
+                                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                                    Consultar resultados
+                                                </li>
+                                                <li class="mb-2">
+                                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                                    Ver beneficios
+                                                </li>
+                                                <li class="mb-2">
+                                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                                    Estado de graduación
+                                                </li>
+                                            </ul>
+                                            <div class="mt-4">
+                                                <span class="badge bg-success p-2">
+                                                    Solo requiere número de cédula
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div class="bg-light p-4 text-center text-muted">
+                        <p class="mb-0">
+                            <i class="bi bi-shield-check"></i>
+                            Sistema seguro y confidencial
+                        </p>
+                        <small>© 2024 Unidades Tecnológicas de Santander</small>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
