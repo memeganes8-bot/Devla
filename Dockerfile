@@ -7,9 +7,9 @@ RUN apk add --no-cache maven
 # Crear directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos de Maven
-COPY pom.xml .
-COPY src ./src
+# Copiar archivos de Maven desde la carpeta saberpro
+COPY saberpro/pom.xml .
+COPY saberpro/src ./src
 
 # Compilar el proyecto
 RUN mvn clean package -DskipTests
